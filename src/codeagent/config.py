@@ -73,6 +73,23 @@ class Settings(BaseSettings):
     llm_first_token_timeout: float = DEFAULT_LLM_FIRST_TOKEN_TIMEOUT
     llm_temperature: float = 0.0
 
+    # ---- Neo4j 代码图（R2） ----
+    # 默认端口 7689 对应 docker-compose 的 neo4j 服务（7476/7689，避开本机已有 Neo4j）。
+    neo4j_uri: str = "bolt://127.0.0.1:7689"
+    neo4j_user: str = "neo4j"
+    neo4j_password: str = "codeagent-local-dev"
+    # 可选：留空使用服务端默认库；多库部署时填目标库名。
+    neo4j_database: str = ""
+    neo4j_timeout: float = 5.0
+
+    # ---- 代码图 LLM 候选边（CALLS/TESTS） ----
+    graph_llm_max_candidates: int = 30
+    graph_llm_confidence: float = 0.6
+    graph_llm_fanout: int = 50
+    graph_llm_budget_tokens: int = 12000
+    # 推理模型（opencode-go deepseek）会把输出预算先用于 reasoning；2048 常被截断。
+    graph_llm_max_output_tokens: int = 4096
+
     # ---- agent 预算 ----
     agent_max_tool_calls: int = 6
     agent_max_turns: int = 8
@@ -102,6 +119,11 @@ class Settings(BaseSettings):
     @property
     def allowed_roots(self) -> list[Path]:
         return [Path(item).expanduser() for item in self.code_allowed_roots]
+
+    @property
+    def graph_configured(self) -> bool:
+        """Neo4j 三要素齐全才视为已配置；未配置时图端点返回 503、impact 回退 SQLite。"""
+        return bool(self.neo4j_uri.strip() and self.neo4j_user.strip() and self.neo4j_password)
 
     @property
     def use_mysql(self) -> bool:

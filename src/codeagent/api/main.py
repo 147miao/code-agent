@@ -51,11 +51,15 @@ def create_app(settings: Settings | None = None, *, services: AppServices | None
         current: AppServices = getattr(request.app.state, "services", None) or AppServices(settings=resolved)
         llm = current.llm
         providers = llm.provider_status() if callable(getattr(llm, "provider_status", None)) else {}
+        graph = getattr(current, "graph", None)
+        describe = getattr(graph, "describe", None)
         return {
             "status": "ok" if not current.errors else "degraded",
             "deps": current.availability(),
             "errors": current.errors,
             "providers": providers,
+            # 只展示连接配置，不触发 Neo4j 连接。
+            "graph": describe() if callable(describe) else {"configured": False},
         }
 
     return app

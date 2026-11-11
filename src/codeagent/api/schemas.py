@@ -26,6 +26,11 @@ class AskRequest(StrictModel):
     session_id: str | None = Field(default=None, max_length=MAX_REPO_ID_CHARS)
 
 
+class GraphBuildRequest(StrictModel):
+    repo_id: str = Field(min_length=1, max_length=MAX_REPO_ID_CHARS)
+    with_llm: bool = False
+
+
 class SessionCreateRequest(StrictModel):
     title: str = Field(default="", max_length=MAX_TITLE_CHARS)
 

@@ -536,6 +536,60 @@ class CodeStore:
                 pass
         return normalized.lstrip("./")
 
+    def export_repo(self, repo_id: str) -> dict[str, list[dict[str, Any]]]:
+        """导出仓库全部派生行（供 codegraph 等只读消费者使用）。
+
+        返回 files/symbols/imports/references/chunks 五个列表，行按稳定顺序排序；
+        不需要图能力的调用方可以忽略本方法。所有列在一条连接内读取，避免跨表快照不一致。
+        """
+        with self._connection() as conn:
+            files = [
+                dict(row)
+                for row in conn.execute(
+                    "SELECT path, file_hash, size, mtime FROM files WHERE repo_id = ? ORDER BY path ASC",
+                    (repo_id,),
+                ).fetchall()
+            ]
+            symbols = [
+                dict(row)
+                for row in conn.execute(
+                    "SELECT path, qualname, kind, start_line, end_line, docstring, code_hash "
+                    "FROM symbols WHERE repo_id = ? ORDER BY path ASC, start_line ASC, qualname ASC",
+                    (repo_id,),
+                ).fetchall()
+            ]
+            imports = [
+                dict(row)
+                for row in conn.execute(
+                    "SELECT src_path, module, level, lineno FROM imports WHERE repo_id = ? "
+                    "ORDER BY src_path ASC, lineno ASC, module ASC",
+                    (repo_id,),
+                ).fetchall()
+            ]
+            references = [
+                dict(row)
+                for row in conn.execute(
+                    'SELECT src_path, name, lineno FROM "references" WHERE repo_id = ? '
+                    "ORDER BY src_path ASC, lineno ASC, name ASC",
+                    (repo_id,),
+                ).fetchall()
+            ]
+            chunks = [
+                dict(row)
+                for row in conn.execute(
+                    "SELECT chunk_id, path, qualname, kind, start_line, end_line, text FROM chunks "
+                    "WHERE repo_id = ? ORDER BY path ASC, start_line ASC, chunk_id ASC",
+                    (repo_id,),
+                ).fetchall()
+            ]
+        return {
+            "files": files,
+            "symbols": symbols,
+            "imports": imports,
+            "references": references,
+            "chunks": chunks,
+        }
+
     def overview(self, repo_id: str) -> dict[str, Any]:
         """仓库概览；repo 不存在返回空 dict。"""
         repo = self.get_repo(repo_id)
