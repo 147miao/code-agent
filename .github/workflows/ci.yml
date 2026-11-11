@@ -1,0 +1,28 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install
+        run: |
+          python -m venv .venv
+          . .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -e .
+          pip install pytest pytest-asyncio ruff
+      - name: Lint
+        run: . .venv/bin/activate && ruff check src tests scripts
+      - name: Tests
+        run: . .venv/bin/activate && pytest tests -q
+      - name: FTS5 available
+        run: . .venv/bin/activate && python -c "import sqlite3; c=sqlite3.connect(':memory:'); c.execute('CREATE VIRTUAL TABLE t USING fts5(x)'); print('fts5 ok')"
