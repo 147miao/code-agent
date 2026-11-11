@@ -190,8 +190,8 @@ class MySQLSessionRepository:
                 "VALUES (%s, %s, %s, %s, %s)",
                 (sid, role_text, text, meta_json, now),
             )
-            cursor.execute("UPDATE sessions SET updated_at = %s WHERE id = %s", (now, sid))
             message_id = int(cursor.lastrowid or 0)
+            cursor.execute("UPDATE sessions SET updated_at = %s WHERE id = %s", (now, sid))
         return {
             "id": message_id,
             "session_id": sid,

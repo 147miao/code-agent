@@ -1,52 +1,78 @@
 [
   {
-    "question": "CodeIndexer 增量索引 file_hash 删除文件清理",
-    "expect_paths": ["src/codeagent/index/indexer.py"],
-    "expect_qualnames": ["CodeIndexer"]
+    "question": "AgentLimits 的预算字段在哪里定义？",
+    "expect_paths": [
+      "src/codeagent/agent/loop.py"
+    ],
+    "expect_qualnames": [
+      "AgentLimits"
+    ]
   },
   {
-    "question": "scan_repo 排除 site-packages 符号链接",
-    "expect_paths": ["src/codeagent/index/scanner.py"],
-    "expect_qualnames": ["scan_repo"]
+    "question": "search_code 怎么用双 FTS 表？",
+    "expect_paths": [
+      "src/codeagent/index/store.py"
+    ],
+    "expect_qualnames": [
+      "CodeStore"
+    ]
   },
   {
-    "question": "parse_source 语法错误 ModuleInfo",
-    "expect_paths": ["src/codeagent/index/parser.py"],
-    "expect_qualnames": ["parse_source"]
+    "question": "trigram 表在什么时候回填？",
+    "expect_paths": [
+      "src/codeagent/index/store.py"
+    ],
+    "expect_qualnames": []
   },
   {
-    "question": "build_chunks chunk_id 切分",
-    "expect_paths": ["src/codeagent/index/chunker.py"],
-    "expect_qualnames": ["build_chunks"]
+    "question": "MySQLSessionRepository 怎么建连接？",
+    "expect_paths": [
+      "src/codeagent/sessions/mysql.py"
+    ],
+    "expect_qualnames": [
+      "MySQLSessionRepository"
+    ]
   },
   {
-    "question": "chunks_fts_trigram RRF 双表检索",
-    "expect_paths": ["src/codeagent/index/store.py"],
-    "expect_qualnames": ["CodeStore", "reciprocal_rank_fusion"]
+    "question": "LLM 熔断器在哪里实现？",
+    "expect_paths": [
+      "src/codeagent/llm/router.py"
+    ],
+    "expect_qualnames": []
   },
   {
-    "question": "verify_code_citations 引用校验 行号 EOF",
-    "expect_paths": ["src/codeagent/citations.py"],
-    "expect_qualnames": ["verify_code_citations"]
+    "question": "repos endpoint 路由 api/routes.py",
+    "expect_paths": [
+      "src/codeagent/api/routes.py"
+    ],
+    "expect_qualnames": []
   },
   {
-    "question": "CodeService search_code repo 过滤",
-    "expect_paths": ["src/codeagent/retrieval/service.py"],
-    "expect_qualnames": ["CodeService", "CodeService.search_code"]
+    "question": "read_file 的行数限制是多少？",
+    "expect_paths": [
+      "src/codeagent/agent/tools.py"
+    ],
+    "expect_qualnames": []
   },
   {
-    "question": "排除规则 符号链接",
-    "expect_paths": ["src/codeagent/index/scanner.py"],
-    "expect_qualnames": ["is_excluded_dir"]
+    "question": "verify_code_citations 怎么检查行号？",
+    "expect_paths": [
+      "src/codeagent/citations.py"
+    ],
+    "expect_qualnames": []
   },
   {
-    "question": "qualname 嵌套 符号",
-    "expect_paths": ["src/codeagent/index/parser.py"],
-    "expect_qualnames": ["_walk_scope"]
+    "question": "codegraph impact 回退 SQLite 的 fallback 在哪？",
+    "expect_paths": [
+      "src/codeagent/codegraph/impact.py"
+    ],
+    "expect_qualnames": []
   },
   {
-    "question": "引用有效 文件存在",
-    "expect_paths": ["src/codeagent/citations.py"],
-    "expect_qualnames": ["verify_code_citations"]
+    "question": "codegraph schema 有哪些约束？",
+    "expect_paths": [
+      "src/codeagent/codegraph/schema.py"
+    ],
+    "expect_qualnames": []
   }
 ]

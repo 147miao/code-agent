@@ -15,6 +15,7 @@ from .services import AppServices, build_services
 
 logger = logging.getLogger(__name__)
 
+
 APP_TITLE = "code-agent"
 APP_VERSION = "0.1.0"
 API_PREFIX = "/api"

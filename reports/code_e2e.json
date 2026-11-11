@@ -1,0 +1,102 @@
+{
+  "report": {
+    "n": 10,
+    "refusal_count": 0,
+    "citation_valid_rate": 1.0,
+    "expected_path_hit_rate": 0.8,
+    "p50_ms": 24714,
+    "avg_ms": 27359
+  },
+  "rows": [
+    {
+      "q": "AgentLimits 的预算字段在哪里定义？",
+      "status": 200,
+      "refusal": false,
+      "cites": 15,
+      "valid": 15,
+      "hit": true,
+      "ms": 53316
+    },
+    {
+      "q": "search_code 怎么用双 FTS 表？",
+      "status": 200,
+      "refusal": false,
+      "cites": 6,
+      "valid": 6,
+      "hit": true,
+      "ms": 58021
+    },
+    {
+      "q": "trigram 表在什么时候回填？",
+      "status": 200,
+      "refusal": false,
+      "cites": 4,
+      "valid": 4,
+      "hit": true,
+      "ms": 8138
+    },
+    {
+      "q": "MySQLSessionRepository 怎么建连接？",
+      "status": 200,
+      "refusal": false,
+      "cites": 4,
+      "valid": 4,
+      "hit": true,
+      "ms": 18737
+    },
+    {
+      "q": "LLM 熔断器在哪里实现？",
+      "status": 200,
+      "refusal": false,
+      "cites": 8,
+      "valid": 8,
+      "hit": true,
+      "ms": 28064
+    },
+    {
+      "q": "repo 索引 API 在哪个路由？",
+      "status": 200,
+      "refusal": false,
+      "cites": 6,
+      "valid": 6,
+      "hit": true,
+      "ms": 28920
+    },
+    {
+      "q": "read_file 的行数限制是多少？",
+      "status": 200,
+      "refusal": false,
+      "cites": 8,
+      "valid": 8,
+      "hit": true,
+      "ms": 32420
+    },
+    {
+      "q": "verify_code_citations 怎么检查行号？",
+      "status": 200,
+      "refusal": false,
+      "cites": 4,
+      "valid": 4,
+      "hit": true,
+      "ms": 21365
+    },
+    {
+      "q": "codegraph impact 回退 SQLite 的 fallback 在哪？",
+      "status": 200,
+      "refusal": false,
+      "cites": 5,
+      "valid": 5,
+      "hit": false,
+      "ms": 11318
+    },
+    {
+      "q": "codegraph schema 有哪些约束？",
+      "status": 200,
+      "refusal": false,
+      "cites": 7,
+      "valid": 7,
+      "hit": false,
+      "ms": 13292
+    }
+  ]
+}

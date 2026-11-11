@@ -315,7 +315,19 @@ class AgentTools:
         if not text:
             raise AgentToolError("invalid_args", "query 不能为空")
         limit = max(1, min(_to_int(k, DEFAULT_SEARCH_K), MAX_SEARCH_K))
-        hits = self.service.search_code(text, k=limit, repo_id=self.repo_id)
+        tokens = list(dict.fromkeys(re.findall(r"[A-Za-z_][A-Za-z0-9_]{2,}", text)))[:8]
+        queries = [text]
+        if tokens:
+            token_query = " ".join(tokens)
+            if token_query.lower() != text.lower():
+                queries.append(token_query)
+        merged: dict[str, dict[str, object]] = {}
+        for qi, query in enumerate(queries):
+            for rank, hit in enumerate(self.service.search_code(query, k=limit * 2, repo_id=self.repo_id)):
+                key = str(hit.get("chunk_id") or f"{hit.get('path')}:{hit.get('start_line')}:{hit.get('end_line')}")
+                item = merged.setdefault(key, {**hit, "_rrf": 0.0})
+                item["_rrf"] = float(item["_rrf"]) + (1.0 / (60 + rank + 1)) * (1.2 if qi else 1.0)
+        hits = sorted(merged.values(), key=lambda item: -float(item.get("_rrf") or 0.0))[:limit]
         items: list[dict[str, Any]] = []
         for hit in hits:
             path = str(hit.get("path") or "")

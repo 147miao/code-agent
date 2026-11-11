@@ -12,8 +12,8 @@ from codeagent.config import DEFAULT_LLM_PROVIDERS, Settings
 
 def test_defaults() -> None:
     settings = Settings(_env_file=None)
-    assert settings.agent_max_tool_calls == 6
-    assert settings.agent_max_turns == 8
+    assert settings.agent_max_tool_calls == 4
+    assert settings.agent_max_turns == 5
     assert settings.agent_timeout_s == 120.0
     assert settings.database_url == ""
     assert settings.use_mysql is False

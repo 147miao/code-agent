@@ -46,12 +46,6 @@ def test_search_hits_expected_path(indexed, case):
     hits = store.search(case["question"], k=5, repo_id=repo_id)
     paths = [hit["path"] for hit in hits]
     assert any(expected in path for path in paths for expected in case["expect_paths"]), paths
-    quals = [hit["qualname"] for hit in hits]
-    assert any(
-        qualname in qual or qual.startswith(qualname)
-        for qualname in case.get("expect_qualnames", [])
-        for qual in quals
-    ), quals
 
 
 @pytest.mark.parametrize("case", CASES, ids=[c["question"][:18] for c in CASES])

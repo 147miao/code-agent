@@ -8,15 +8,13 @@ DATABASE_URL / LLM_PROVIDERS / AGENT_MAX_TOOL_CALLS / CODE_ALLOWED_ROOTS。
 from __future__ import annotations
 
 import json
+import os
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-from dotenv import load_dotenv
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
-load_dotenv(override=False)
 
 DATA_SUBDIR = "data"
 DEFAULT_DATA_ROOT = Path.home() / ".codeagent"
@@ -69,6 +67,7 @@ class Settings(BaseSettings):
     # ---- llm ----
     # JSON 数组；空字符串 = DEFAULT_LLM_PROVIDERS
     llm_providers: str = ""
+    opencode_go_api_key: str = ""
     llm_chat_timeout: float = DEFAULT_LLM_CHAT_TIMEOUT
     llm_first_token_timeout: float = DEFAULT_LLM_FIRST_TOKEN_TIMEOUT
     llm_temperature: float = 0.0
@@ -91,8 +90,8 @@ class Settings(BaseSettings):
     graph_llm_max_output_tokens: int = 4096
 
     # ---- agent 预算 ----
-    agent_max_tool_calls: int = 6
-    agent_max_turns: int = 8
+    agent_max_tool_calls: int = 4
+    agent_max_turns: int = 5
     agent_timeout_s: float = 120.0
 
     # ---- 允许索引/读取的根目录（默认仅当前用户 home）----
@@ -132,6 +131,19 @@ class Settings(BaseSettings):
     @property
     def resolved_llm_providers(self) -> list[dict[str, Any]]:
         """解析 LLM_PROVIDERS；空字符串返回内置 provider 链。"""
+        providers = self._providers_from_raw()
+        for item in providers:
+            env_name = str(item.get("api_key_env") or "")
+            if env_name and not item.get("api_key"):
+                value = os.environ.get(env_name)
+                if not value and env_name == "OPENCODE_GO_API_KEY":
+                    value = self.opencode_go_api_key
+                if value:
+                    item["api_key"] = value
+                    item.pop("api_key_env", None)
+        return providers
+
+    def _providers_from_raw(self) -> list[dict[str, Any]]:
         raw = self.llm_providers.strip()
         if not raw:
             return [dict(item) for item in DEFAULT_LLM_PROVIDERS]
