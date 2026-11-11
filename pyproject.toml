@@ -31,7 +31,13 @@ packages = ["src/codeagent"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
 testpaths = ["tests"]
+# 集成测试（MySQL 等外部服务）默认跳过；显式运行：pytest -m integration
+addopts = "-m 'not integration'"
+markers = [
+  "integration: 需要外部服务（MySQL 等）的集成测试；默认跳过，用 -m integration 运行",
+]
 
 [tool.ruff]
 line-length = 120

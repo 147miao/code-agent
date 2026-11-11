@@ -1,0 +1,25 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: codeagent-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: codeagent
+      MYSQL_DATABASE: codeagent
+      MYSQL_USER: codeagent
+      MYSQL_PASSWORD: codeagent
+    ports:
+      # 3307 避免与本机已有的 3306 冲突
+      - "3307:3306"
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - codeagent_mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-pcodeagent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  codeagent_mysql:
