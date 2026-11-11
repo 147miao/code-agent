@@ -21,5 +21,26 @@ services:
       timeout: 5s
       retries: 20
 
+  neo4j:
+    image: neo4j:5.26-community
+    container_name: codeagent-neo4j
+    environment:
+      NEO4J_AUTH: neo4j/codeagent-local-dev
+      NEO4J_server_memory_heap_initial__size: 256m
+      NEO4J_server_memory_heap_max__size: 512m
+      NEO4J_server_memory_pagecache_size: 256m
+    ports:
+      # 7476/7689 避免与本机已有 Neo4j（7474/7687）冲突
+      - "7476:7474"
+      - "7689:7687"
+    volumes:
+      - ./.volumes/neo4j:/data
+    healthcheck:
+      test: ["CMD-SHELL", "cypher-shell -u neo4j -p codeagent-local-dev 'RETURN 1' >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 10s
+      retries: 30
+      start_period: 30s
+
 volumes:
   codeagent_mysql:
